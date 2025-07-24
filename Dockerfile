@@ -1,10 +1,11 @@
-FROM tensorflow/tensorflow:2.19.0-gpu-jupyter
+FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
 
-# Cài các thư viện bạn cần
-RUN pip install --upgrade pip && \
-    pip install pandas scikit-learn
+# Cài Python và pip
+RUN apt-get update && apt-get install -y python3-pip
 
-# Mặc định chạy JupyterLab
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--no-browser"]
+# Cài PyTorch & TensorFlow GPU (chọn phiên bản phù hợp)
+RUN pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 \
+    && pip3 install --no-cache-dir tensorflow
 
-EXPOSE 8888
+WORKDIR /workspace
+CMD ["/bin/bash"]
