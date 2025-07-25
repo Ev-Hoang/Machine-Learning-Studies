@@ -1,0 +1,25 @@
+# Base image từ PyTorch team (đã bao gồm CUDA 12.1 + cuDNN)
+FROM pytorch/pytorch:2.2.2-cuda12.1-cudnn8-runtime
+
+# Tùy chọn: Cài thêm tiện ích cơ bản
+RUN apt-get update && apt-get install -y \
+    git wget curl unzip ffmpeg libgl1-mesa-glx \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Cài pip packages bổ sung
+RUN pip install --upgrade pip && pip install \
+    numpy \
+    opencv-python-headless \
+    matplotlib \
+    tqdm \
+    ipython \
+    jupyterlab \
+    torchinfo \
+    torchvision \
+    torchaudio
+
+# Tạo thư mục làm việc
+WORKDIR /workspace
+
+# Mount volume khi run: docker run -v $(pwd):/workspace
+CMD ["python3"]
