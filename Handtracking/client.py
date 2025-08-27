@@ -21,14 +21,25 @@ hands = mp_hands.Hands(
 feature_queue = queue.Queue(maxsize=1)
 
 def extract_features(frame):
-    """Trích xuất vector 42D từ frame"""
+    """Trích xuất vector 42D từ frame với chuẩn hóa wrist + scale"""
     results = hands.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
     if results.multi_hand_landmarks:
         lm = results.multi_hand_landmarks[0]
-        coords = []
-        for p in lm.landmark:
-            coords.extend([p.x, p.y])
-        return np.array(coords, dtype=np.float32)
+        
+        # Lấy tất cả (x,y)
+        coords = np.array([[p.x, p.y] for p in lm.landmark], dtype=np.float32)
+
+        # B1: dịch chuyển sao cho cổ tay = (0,0)
+        wrist = coords[0]
+        coords -= wrist
+
+        # B2: scale dựa trên khoảng cách lớn nhất từ cổ tay
+        max_dist = np.linalg.norm(coords, axis=1).max()
+        if max_dist > 0:
+            coords /= max_dist
+
+        # Flatten thành vector 42D
+        return coords.flatten()
     else:
         return np.zeros(42, dtype=np.float32)  # padding nếu ko có tay
 
@@ -88,5 +99,3 @@ if __name__ == "__main__":
 
     # chạy websocket loop
     asyncio.run(send_features())
-
-# CONCLUSION : CODE IS OK
