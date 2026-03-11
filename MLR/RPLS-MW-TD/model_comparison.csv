@@ -1,5 +1,5 @@
-Model,Max |rel error|,Min rel error,RMSE,Model updates
-PLS (static),0.0768,-0.0483,49.788,0
-MW-RPLS,0.0755,-0.0533,65.0325,280
-TD-MW-RPLS,0.0755,-0.0533,65.0325,280
-TD-MW-RPLS + Adaptive,0.0755,-0.0533,64.8854,275
+Model,Max |rel error|,Min rel error,RMSE,R²,Model updates
+PLS (static),0.0768,-0.0483,49.788,0.9801,0
+MW-RPLS,0.0755,-0.0533,65.0325,0.9661,280
+TD-MW-RPLS,0.0755,-0.0533,65.0325,0.9661,280
+TD-MW-RPLS + Adaptive,0.0755,-0.0533,64.8854,0.9663,275
